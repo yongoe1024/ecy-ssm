@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 启用spring mvc 注解 -->
+    <!--    使用<context:annotation- config/>隐式地向 Spring容器注册这4个BeanPostProcessor ：
+                                AutowiredAnnotationBeanPostProcessor、
+                                RequiredAnnotationBeanPostProcessor、
+                                CommonAnnotationBeanPostProcessor以及
+                                PersistenceAnnotationBeanPostProcessor
+    -->
+    <context:annotation-config/>
+
+    <!-- 扫描注解，这样com.xjt包下的文件都能被扫描 -->
+    <!--    <context:component-scan>做了<context:annotation-config>要做的事情，还额外支持@Component，@Repository，@Service，@Controller注解。
+            并且<context:component-scan>扫描base-package并且在application context中注册扫描的beans.
+            所以配置<context:component-scan>就不需要配置<context:annotation- config/>
+    -->
+    <context:component-scan base-package="com.yongoe.ecy"/>
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!-- 开启SpringMVC注解模式 -->
+    <!--    至于该项看前缀就应该知道是springmvc所需要的注解。
+            <mvc:annotation-driven/>相当于注册了
+            DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter两个bean
+            ，配置一些messageconverter。即解决了@Controller注解的使用前提配置。
+    -->
+    <mvc:annotation-driven/>
+    <!-- 静态资源默认servlet配置 -->
+    <mvc:default-servlet-handler/>
+
+    <!--配置自定义拦截器-->
+    <mvc:interceptors>
+        <!--配置自定义拦截器-->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/oauth/**"/>
+            <mvc:exclude-mapping path="/captcha/**"/>
+            <mvc:exclude-mapping path="/forget"/>
+            <mvc:exclude-mapping path="/register"/>
+            <ref bean="loginInterceptor"/>
+        </mvc:interceptor>
+        <!--是按照配置顺序来执行的  -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/oauth/**"/>
+            <mvc:exclude-mapping path="/captcha/**"/>
+            <mvc:exclude-mapping path="/forget"/>
+            <mvc:exclude-mapping path="/register"/>
+            <ref bean="authInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+</beans>
