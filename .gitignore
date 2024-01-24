@@ -13,3 +13,9 @@ ecy-file
 pom.xml.versionsBackup
 
 out
+js/
+font/
+img/
+css/
+index.html
+favicon.ico
