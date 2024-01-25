@@ -25,26 +25,26 @@ public class LoginController {
     @Resource
     private LoginService loginService;
 
-    @WebLog(description = "登录")
+    @WebLog(description = "登录", ignore = false)
     @PostMapping("/login")
     public R login(@RequestBody LoginReq loginReq, HttpServletRequest request) {
         return loginService.login(loginReq, request);
     }
 
-    @WebLog(description = "退出登录")
+    @WebLog(description = "退出登录", ignore = false)
     @PostMapping("/logout")
     public R logout() {
         UserUtils.logout();
         return R.success("退出登录");
     }
 
-    @WebLog(description = "注册")
+    @WebLog(description = "注册", ignore = false)
     @PostMapping("/register")
     public R register(@RequestBody RegisterReq register) {
         return loginService.register(register);
     }
 
-    @WebLog(description = "找回密码")
+    @WebLog(description = "找回密码", ignore = false)
     @PostMapping("/forget")
     public R forget(@RequestBody ForgetReq forget) {
         return loginService.forget(forget);

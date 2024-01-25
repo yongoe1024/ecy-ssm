@@ -50,7 +50,7 @@
                      @click="submitForm">立即注册</el-button>
         </el-form-item>
 
-        <el-link href="/login"
+        <el-link @click="$router.push('/login')"
                  type="primary">已有账号？立即登录</el-link>
       </el-form>
     </el-card>
@@ -70,12 +70,12 @@ export default {
         password: null,
       },
       rules: {
-        name: [{ required: true, trigger: 'change' }],
-        phone: [{ required: true, trigger: 'change' }],
+        name: [{ required: true, message: '请输入姓名', trigger: 'change' }],
+        phone: [{ required: true, message: '请输入手机', trigger: 'change' }],
         email: [{ type: 'email', required: true, message: '请输入邮箱', trigger: 'change' }],
-        username: [{ required: true, trigger: 'change' }],
+        username: [{ required: true, message: '请输入用户名', trigger: 'change' }],
         password: [
-          { required: true, message: "用户密码不能为空", trigger: "change" },
+          { required: true, message: "请输入密码", trigger: "change" },
           { min: 6, message: '密码长度必须大于6', trigger: 'change' }
         ],
       },
@@ -100,7 +100,7 @@ export default {
 .box {
   height: 100%;
   width: 100%;
-  position: absolute;
+  position: fixed !important;
   background-image: url("../../assets/back.jpg");
   background-size: 100% 100%;
   display: flex;
