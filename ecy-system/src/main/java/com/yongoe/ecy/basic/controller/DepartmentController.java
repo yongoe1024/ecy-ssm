@@ -38,7 +38,6 @@ public class DepartmentController {
     //@WebLog(description = "部门-查询数据")
     @PostMapping("/tree")
     public R tree() {
-        redisUtils.set("tes2t", "test2");
         List<Department> list = departmentService.getMenuByTree(null);
         List<DepartmentRes> resList = departmentConvert.entity2ResList(list);
         return R.success().put(resList);
