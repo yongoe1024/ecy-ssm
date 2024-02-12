@@ -32,7 +32,7 @@ export default {
       },
       rules: {
         password: [
-          { required: true, message: "用户密码不能为空", trigger: "change" },
+          { required: true, message: "请输入密码", trigger: "change" },
           { min: 6, message: '密码长度必须大于6', trigger: 'change' }
         ],
       },
@@ -42,7 +42,7 @@ export default {
     update () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.axios.post('/user/password', this.form).catch(e => { })
+          this.axios.post('/user/password', this.form)
         }
       })
     }
