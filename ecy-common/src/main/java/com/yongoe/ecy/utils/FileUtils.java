@@ -21,13 +21,6 @@ import java.util.UUID;
 @Component
 public class FileUtils {
     private static String fileSavePath;
-    //项目路径
-    private static String contextPath;
-
-    @Value("${server.servlet.context-path}")
-    public void setContextPath(String s) {
-        contextPath = s;
-    }
 
     @Value("${ecy.file-save-path}")
     public void setFileSavePath(String s) {
@@ -52,7 +45,7 @@ public class FileUtils {
             // 创建这个新文件
             File newFile = new File(Path.of(getFullFilePath(), fileName).toString());
             file.transferTo(newFile);
-            return Path.of(contextPath, "/file/", getRelativeFilePath(), fileName).toString();
+            return Path.of("http://localhost:8081", "/file/", getRelativeFilePath(), fileName).toString();
         } catch (IOException e) {
             throw new RuntimeException("无法创建文件");
         }

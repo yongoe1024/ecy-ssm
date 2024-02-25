@@ -19,12 +19,9 @@ ecy-ssm管理系统
 1. ecy-server中的config.properties为配置文件，修改数据库  
 2. 后端的端口由tomcat设置：在idea运行配置中选择tomcat8.5，然后修改端口为8081，勾选`Tomcat服务器设置-部署Tomcat实例中配置的应用程序`，启动即可  
 3. 如果要进行文件上传下载，包括修改头像，需要找到tomcat安装目录，进入conf/server.xml  
-在`<Host>`标签下添加`<Context docBase="文件存储路径/Users/yongoe/code/ecy-file" path="/ecy/file"/>`，其中/ecy/file的ecy为后端访问路径，一般是war包的名字  
+在`<Host>`标签下添加`<Context docBase="文件存储路径/Users/yongoe/code/ecy-file" path="/file"/>`，其中/file的ecy为后端访问路径，一般是war包的名字  
 4. 修改后端配置变量，在WEB-INF/web.xml中：  
 ```xml     <context-param>
-    <param-name>server.servlet.context-path</param-name>
-        <param-value>/ecy</param-value>
-    </context-param>
     <context-param>
         <param-name>ecy.file-save-path</param-name>
         <param-value>/Users/yongoe/code/ecy-file</param-value>
@@ -38,7 +35,7 @@ ecy-ui 中的`README.md`为前端文档
 4. .env.dev和.env.prod为环境变量，修改后端地址:其中/ecy为后端访问路径
 5. 执行`npm run serve`，启动vue项目
 6. 账号admin，密码111111
-7. vue.config中`publicPath: '/ecy'`，与上边同步，后端访问路径
+7. vue.config中`publicPath: '/'`，与上边同步，后端访问路径
 
 #### 文件上传下载目录
 上传文件，用户头像等，存储在`ecy-file`文件夹

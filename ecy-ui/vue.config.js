@@ -7,7 +7,7 @@ module.exports = defineConfig({
   },
   transpileDependencies: true,
   lintOnSave: false,
-  publicPath: '/ecy',
+  publicPath: '/',
   devServer: {
     client: {
       overlay: false,
@@ -18,7 +18,7 @@ module.exports = defineConfig({
     ],
     // 打包后就用nginx转发啦
     proxy: {
-      '/ecy': {
+      '/': {
         target: 'http://localhost:8081',
         ws: true,
         changeOrigin: true
