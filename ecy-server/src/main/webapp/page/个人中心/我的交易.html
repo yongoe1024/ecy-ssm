@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模版</title>
+</head>
+<script src="/js/vue2.6.js"></script>
+<script src="/js/axios1.6.js"></script>
+<link rel="stylesheet" href="/element-ui/index.css">
+<script src="/element-ui/index.js"></script>
+<link rel="stylesheet" href="/css/index.css">
+<script src="/js/index.js"></script>
+<script src="/js/component.js"></script>
+
+<body>
+
+<div id="root">
+    <el-card style="min-height: 550px;">
+        <el-radio-group v-model="radio" @input="getList">
+            <el-radio :label="1">购买</el-radio>
+            <el-radio :label="2">出售</el-radio>
+        </el-radio-group>
+        <el-row :gutter="10">
+            <el-col style="margin-top: 10px;" :span="8" v-for="h in dataList" :key="h.id">
+                <el-card style="height: 400px;" shadow="hover">
+                    <img :src="h.img" style="height: 150px; width: 100%; margin-top: 10px;" class="image">
+                    <div style="padding: 5px;">
+                        <div style="font-size: 18px; font-weight: 550;">
+                            {{ h.name }}
+                        </div>
+                        <div style="margin-top: 10px; font-size: 16px;">
+                            {{ '交易地点:' + h.address }}
+                        </div>
+                        <div style="margin-top: 10px; font-size: 13px; color: #87888a;;">
+                            {{ '联系方式:' + h.phone }}
+                        </div>
+                        <div style="margin-top: 10px; color: #E31C1A;">
+                            {{ '价格：' + h.price }}
+                        </div>
+                        <div style="margin-top: 10px; color: #E31C1A;">
+                            {{ '状态：' + h.status }}
+                        </div>
+                        <el-button v-if="radio==1 && h.status=='交易中'" @click="finish(h.id)"
+                                   style=" float: right; margin-bottom: 20px;"
+                                   type="danger" size="mini">完成交易
+                        </el-button>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+        <el-pagination background style="margin-top: 10px; float: right;" @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange" :page-size="queryParam.size"
+                       layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+    </el-card>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            radio: 1,
+            total: 0,
+            name: '',
+            queryParam: {
+                buyer: null,
+                createBy: null,
+                current: 1,
+                size: 10,
+            },
+            dataList: [],
+        },
+        mounted() {
+            this.name = JSON.parse(localStorage.getItem('user')).name
+            this.getList()
+        },
+        methods: {
+            finish(id) {
+                post(`/project/goods//finish/${id}`).then(data => {
+                    this.getList()
+                })
+            },
+            // 改变页码
+            handleSizeChange(val) {
+                this.queryParam.size = val
+                this.getList()
+            },
+            // 点击页数
+            handleCurrentChange(val) {
+                this.queryParam.current = val
+                this.getList()
+            },
+            getList() {
+                if (this.radio === 1) {
+                    this.getBuyList()
+                } else {
+                    this.getMyGoodsList()
+                }
+            },
+            getBuyList() {
+                this.queryParam.createBy = null
+                this.queryParam.buyer = this.name
+                post(`/project/goods/page`, this.queryParam).then(data => {
+                    this.dataList = data.list
+                    this.total = data.total - 0
+                })
+            },
+            getMyGoodsList() {
+                this.queryParam.buyer = null
+                this.queryParam.createBy = this.name
+                post(`/project/goods/page`, this.queryParam).then(data => {
+                    this.dataList = data.list
+                    this.total = data.total - 0
+                })
+            },
+        }
+    })
+</script>
+
+</body>
+
+</html>

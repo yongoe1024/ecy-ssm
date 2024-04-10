@@ -1,0 +1,76 @@
+.titleBar {
+  line-height: 35px;
+  background: rgb(247, 247, 247);
+  padding: 0px 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.titleBar h1 {
+  display: inline-block;
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  background: rgb(52, 119, 200);
+  padding: 0px 20px;
+}
+
+.titleBar .el-link {
+  float: right;
+  margin: 10px;
+}
+
+body {
+  margin: 0 0;
+}
+
+#root {
+  margin: 0 auto;
+  width: 70%;
+}
+
+@media (max-width: 1200px) {
+  #root {
+    margin: 0 auto;
+    width: 80%;
+  }
+}
+
+@media (max-width: 1000px) {
+  #root {
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+.text-container {
+  width: 100%;
+  white-space: nowrap;
+  /* 防止文本换行 */
+  overflow: hidden;
+  /* 超出部分隐藏 */
+  text-overflow: ellipsis;
+  /* 超出部分显示省略号 */
+}
+/* 文本超出隐藏变弹框*/
+.tooltip-text {
+  margin-top: 10px;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  line-height: 1.5em;
+  max-height: 3em;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+/* 高级字体 */
+.font {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #5c5e5e;
+  font-weight: 550;
+}
+
+#footer {
+  position: absolute;
+}

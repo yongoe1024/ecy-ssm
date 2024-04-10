@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首页</title>
+</head>
+<script src="/js/vue2.6.js"></script>
+<script src="/js/axios1.6.js"></script>
+<link rel="stylesheet" href="/element-ui/index.css">
+<script src="/element-ui/index.js"></script>
+<link rel="stylesheet" href="/css/index.css">
+<script src="/js/index.js"></script>
+<script src="/js/component.js"></script>
+
+<body>
+  <iframe id="header" src="/page/layout/header.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+    onload="resizeIframe(this)" marginheight=0></iframe>
+
+  <div id="root">
+
+    <div class="titleBar">
+      <h1>热门信息</h1>
+    </div>
+    <el-row :gutter="10">
+      <el-col :span="14">
+        <el-card style="height: 350px;">
+          <div slot="header">
+            <span>垃圾分类心得</span>
+            <el-link style="float: right;" type="primary" href="page/分类心得.html">更多</el-link>
+          </div>
+          <div v-for="i in articleList" :key="i.id" style="margin-bottom: 10px; font-size: 14px;">
+            <el-row>
+              <el-col :span="16">
+                <div class="text-container" style="cursor: pointer;" @click="toReadArticle(i.id)">
+                  {{i.title}}
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <span>{{formatDate(i.createTime)}}</span>
+              </el-col>
+              <el-col :span="4">
+                <span>{{i.createBy}}</span>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+
+      <el-col :span="10">
+        <el-card style="height: 350px;">
+          <div slot="header">
+            <span>公告中心</span>
+            <el-link style="float: right;" type="primary" href="page/公告中心.html">更多</el-link>
+          </div>
+          <div v-for="i in gonggaoList" :key="i.id" style="margin-bottom: 10px; font-size: 14px;">
+            <el-row>
+              <el-col :span="16">
+                <div class="text-container" style="cursor: pointer;" @click="toReadGonggao(i.id)">
+                  {{i.title}}
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <span>{{formatDate(i.createTime)}}</span>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+
+    </el-row>
+
+    <div class="titleBar">
+      <h1>热门兑换奖品</h1>
+      <el-link type="primary" href="page/积分商城.html">更多</el-link>
+    </div>
+    <div>
+      <el-row :gutter="20">
+        <el-col :md="8" :sm="12" v-for="i in prizeList" :key="i.id">
+          <el-card style="height: 230px;">
+            <el-row :gutter="20">
+              <el-col :span="10">
+                <img style="height: 200px;width: 100%" :src="i.img" />
+              </el-col>
+              <el-col :span="14">
+                <h3>{{i.name}}</h3>
+                <el-tooltip effect="dark" :content="i.detials" placement="bottom">
+                  <div class="tooltip-text">
+                    {{ i.detials}}
+                  </div>
+                </el-tooltip>
+                <div class="font">{{`积分: ${i.score}`}}</div>
+                <div class="font">{{`剩余: ${i.num}`}}</div>
+                <el-button style="position:absolute;bottom:0;right:0;margin:10px;" type="primary" size="small"
+                  @click="buy(i.id)">兑换</el-button>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+    <e-message>留言</e-message>
+
+  </div>
+
+
+  <script>
+    var app = new Vue({
+      el: '#root',
+      data: {
+        articleList: [],
+        gonggaoList: [],
+        prizeList: [],
+        queryParam: {
+          current: 1,
+          size: 10,
+        },
+      },
+      mounted () {
+        this.getList()
+      },
+      methods: {
+        // 初始化数据
+        getList () {
+          post(`/project/article/public/page`, {
+            current: 1,
+            size: 4,
+            status: '通过',
+          }).then(data => {
+            this.articleList = data.list
+          })
+          post(`/project/gonggao/public/page`, {
+            current: 1,
+            size: 4,
+          }).then(data => {
+            this.gonggaoList = data.list
+          })
+          post(`/project/prize/public/page`, {
+            current: 1,
+            size: 10,
+          }).then(data => {
+            this.prizeList = data.list
+          })
+        },
+        toReadArticle (id) {
+          window.location.href = "/page/文章.html?id=" + id
+        },
+        toReadGonggao (id) {
+          window.location.href = "/page/公告.html?id=" + id
+        },
+        buy (id) {
+          post(`/project/prize/buy/${id}`)
+        },
+      }
+    })
+  </script>
+
+  <iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+    frameborder="0"></iframe>
+
+</body>
+
+</html>

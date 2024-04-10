@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告中心</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+</head>
+<style>
+    .return {
+        margin-left: 10px;
+    }
+
+    .return:hover {
+        text-decoration: underline;
+        cursor: pointer;
+        color: #3F9EFF;
+    }
+</style>
+
+<body>
+<iframe id="header" src="/page/layout/header.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <div class="titleBar">
+        <h1>公告</h1>
+        <a class="return" @click="goBack"> 返回 </a>
+    </div>
+    <el-card>
+        <div>
+            <!-- 文章标题 -->
+            <h2 style="text-align: center;">{{gonggao.title}}</h2>
+
+            <!-- 作者 -->
+            <p style=" text-align: center; font-weight: 600;">{{gonggao.createBy}} </p>
+
+            <!-- 发表时间 -->
+            <p style=" text-align: center;">{{gonggao.createTime}}</p>
+
+            <!-- 正文内容 -->
+            <p> {{gonggao.content}} </p>
+        </div>
+    </el-card>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            gonggao: {
+                title: '',
+                content: '',
+                createTime: '',
+
+            },
+        },
+        mounted() {
+            this.getList()
+        },
+        methods: {
+            getList() {
+                post(`/project/gonggao/public/page`, {
+                    id: getParameter('id'),
+                    current: 1,
+                    size: 1,
+                }).then(data => {
+                    this.gonggao = data.list[0]
+                })
+            },
+            goBack() {
+                history.back()
+            },
+        }
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0" onload="resizeIframe(this)"></iframe>
+</body>
+
+</html>

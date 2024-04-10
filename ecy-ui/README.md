@@ -24,49 +24,6 @@ npm run serve
 npm run build 
 ```
 
-此时请求前缀为`/ecy`,发到页面所在的地址，不是后端。
-
-```
-vue.config设置过转发
- proxy: {
-      '/ecy': {
-        target: 'http://localhost:8081',
-        ws: true,
-        changeOrigin: true
-      },
-    }
-```
-
-但打包html，解决方法是nginx配置转发，在`ecy-ui/nginx/nginx.conf`中,已配置好结合docker所用的nginx，例如docker网络
-
-```
-server {
-    listen       80 default;
-    server_name  localhost;
-	location   / {
-		root   /usr/share/nginx/html;
-		index   index.html index.htm;
-		try_files $uri $uri/  /index.html;
-	}
-	location  /ecy {
-		proxy_pass  http://ecy-server:8081;
-	}
-}
-```
-
-解决方法2是 env中请求前缀改为 http://localhost:8081/ecy
-但是会影响 `<img src>`的链接，问题多不建议
-
-## docker
-
-```
-dockerfile打包image方法:
-在 /ecy-ui目录下,执行
-docker build -t  ecy-ui:1.0 . 
-
-docker-compose方法: 需结合/ecy/中的docker-compose.yml，无法单独启动
-```
-
 ## 数据字典组件
 
 | 参数          | 值 |

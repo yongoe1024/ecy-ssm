@@ -55,7 +55,7 @@ public class CustomObjectMapper extends ObjectMapper {
     private static class LocalDateSerializer extends com.fasterxml.jackson.databind.JsonSerializer<LocalDate> {
         @Override
         public void serialize(LocalDate value, com.fasterxml.jackson.core.JsonGenerator gen, com.fasterxml.jackson.databind.SerializerProvider serializers) throws java.io.IOException {
-            gen.writeString(value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            gen.writeString(value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
     }
 
@@ -63,7 +63,7 @@ public class CustomObjectMapper extends ObjectMapper {
     private static class LocalDateDeserializer extends com.fasterxml.jackson.databind.JsonDeserializer<LocalDate> {
         @Override
         public LocalDate deserialize(com.fasterxml.jackson.core.JsonParser p, com.fasterxml.jackson.databind.DeserializationContext ctxt) throws java.io.IOException, com.fasterxml.jackson.core.JsonProcessingException {
-            return LocalDate.parse(p.getValueAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            return LocalDate.parse(p.getValueAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
     }
 

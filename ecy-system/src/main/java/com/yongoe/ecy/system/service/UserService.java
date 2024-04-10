@@ -24,4 +24,5 @@ public interface UserService extends IService<User> {
     void upload(List<UserExcel> excelList);
 
     void deleteUser(Long id);
+
 }

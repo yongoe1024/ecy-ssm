@@ -68,10 +68,13 @@
     <!-- 表示当程序加载符合这些路径的资源时，不会通过dispatchservlet -->
     <servlet-mapping>
         <servlet-name>default</servlet-name>
-        <url-pattern>/fonts/*</url-pattern>
+        <url-pattern>/element-ui/*</url-pattern>
         <url-pattern>/img/*</url-pattern>
-        <url-pattern>/js/*</url-pattern>
-        <url-pattern>/index.html</url-pattern>
+        <url-pattern>*.js</url-pattern>
+        <url-pattern>*.css</url-pattern>
+        <url-pattern>*.html</url-pattern>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>/ecy/*</url-pattern>
     </servlet-mapping>
 
 

@@ -20,6 +20,7 @@
         <result column="last_ip" property="lastIp"/>
         <result column="last_time" property="lastTime"/>
         <result column="enabled" property="enabled"/>
+        <result column="score" property="score"/>
         <collection property="roleList"
                     select="selectRoleByUserId"
                     column="id">
@@ -31,7 +32,7 @@
         select a.*
         from sys_role a
                  LEFT JOIN sys_user_role b ON a.id = b.role_id
-        where b.user_id = #{userId}
+        where b.user_id = #{userId} and a.name != '新用户'
     </select>
 
     <!--    获取分页数据-->

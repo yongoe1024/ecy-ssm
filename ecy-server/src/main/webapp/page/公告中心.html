@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告中心</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+</head>
+
+<body>
+<iframe id="header" src="/page/layout/header.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <div class="titleBar">
+        <h1>公告中心</h1>
+        <a style="margin-left: 10px;">
+            垃圾分类，关爱家园，共建绿色地球。
+        </a>
+    </div>
+    <el-card>
+        <div v-for="i in gonggaoList" :key="i.id">
+            <el-row>
+                <el-col :span="16">
+                    <el-link :href="`/page/公告.html?id=${i.id}`">{{i.title }}</el-link>
+                </el-col>
+                <el-col :span="5">
+                    <el-link :href="`/page/公告.html?id=${i.id}`">{{formatDate(i.createTime)}}</el-link>
+                </el-col>
+                <el-col :span="3">
+                    <el-link :href="`/page/公告.html?id=${i.id}`">{{i.createBy}}</el-link>
+                </el-col>
+            </el-row>
+            <el-divider/>
+        </div>
+    </el-card>
+    <el-pagination background style="margin-top: 10px; display:flex;justify-content:center;"
+                   @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="queryParam.size"
+                   layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+</div>
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            total: 0,
+            queryParam: {
+                current: 1,
+                size: 12,
+                id: null,
+                title: null,
+                content: null,
+            },
+            gonggaoList: [],
+        },
+        mounted() {
+            this.getList()
+        },
+        methods: {
+            // 改变页码
+            handleSizeChange(val) {
+                this.queryParam.size = val
+                this.getList()
+            },
+            // 点击页数
+            handleCurrentChange(val) {
+                this.queryParam.current = val
+                this.getList()
+            },
+            getList() {
+                post(`/project/gonggao/public/page`, this.queryParam).then(data => {
+                    this.gonggaoList = data.list
+                    this.total = data.total - 0
+                })
+            },
+        }
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0"></iframe>
+</body>
+
+</html>

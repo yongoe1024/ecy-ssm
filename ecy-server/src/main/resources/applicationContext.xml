@@ -11,16 +11,16 @@
     <!--    文件上传    -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="utf-8"/>
-        <property name="maxUploadSize" value="5606660"/>
-        <property name="maxInMemorySize" value="56066600"/>
+        <property name="maxUploadSize" value="10240000000"/>
+        <property name="maxInMemorySize" value="1024000000"/>
     </bean>
 
     <!-- 配置数据源 -->
     <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
-        <property name="driverClassName" value="${mysql_driver}"/>
-        <property name="jdbcUrl" value="${mysql_url}"/>
-        <property name="username" value="${mysql_username}"/>
-        <property name="password" value="${mysql_password}"/>
+        <property name="driverClassName" value="${db_driver}"/>
+        <property name="jdbcUrl" value="${db_url}"/>
+        <property name="username" value="${db_username}"/>
+        <property name="password" value="${db_password}"/>
         <property name="connectionTestQuery" value="SELECT 1"/>
     </bean>
 
@@ -70,12 +70,13 @@
     <!-- 事务管理 属性 -->
     <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
         <tx:attributes>
+            <!--     只读的get事务，嫌麻烦       -->
             <!--  <tx:method name="get*" propagation="REQUIRED" read-only="true"/>-->
             <tx:method name="*" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
 
-    <!-- 配置切面 -->
+    <!-- 配置 controller 添加事务 -->
     <aop:config>
         <aop:pointcut id="transactionPointcut" expression="execution(* com.yongoe.ecy..controller.*.*(..))"/>
         <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
@@ -83,7 +84,6 @@
 
 
     <!--    redis-->
-
     <!-- redis连接池 -->
     <bean id="jedisPool" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxTotal" value="10"/>
@@ -100,15 +100,15 @@
     <!-- redis连接工厂 -->
     <bean id="redisStandaloneConfiguration"
           class="org.springframework.data.redis.connection.RedisStandaloneConfiguration">
-        <property name="hostName" value="${redis.host}"/>
-        <property name="port" value="${redis.port}"/>
-        <!--        <property name="password"  ref="redisPassword" />-->
-        <property name="database" value="${redis.database}"/>
+        <property name="hostName" value="${redis_host}"/>
+        <property name="port" value="${redis_port}"/>
+        <!--        <property name="password" ref="redisPassword"/>-->
+        <property name="database" value="1"/>
     </bean>
     <bean id="redisPassword" class="org.springframework.data.redis.connection.RedisPassword">
-        <constructor-arg name="thePassword" value="${redis.password}"/>
+        <constructor-arg name="thePassword" value="${redis_password}"/>
     </bean>
-
+    <!--jedis连接池-->
     <bean id="mutableJedisClientConfiguration"
           class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory$MutableJedisClientConfiguration">
         <property name="poolConfig" ref="jedisPool"/>
@@ -130,7 +130,6 @@
         <property name="hashKeySerializer" ref="stringRedisSerializer"/>
         <property name="hashValueSerializer" ref="jackson2JsonRedisSerializer"/>
     </bean>
-
 
     <!--序列化相关bean-->
     <bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>

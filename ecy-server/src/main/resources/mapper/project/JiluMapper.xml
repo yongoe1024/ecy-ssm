@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yongoe.ecy.project.mapper.JiluMapper">
+
+    <!--    获取分页数据-->
+    <select id="getJiluByPage" resultType="com.yongoe.ecy.project.entity.Jilu">
+        select *
+        from  t_jilu
+        <where>
+            <if test="null != jilu.id">
+                and id = #{jilu.id}
+            </if>
+            <if test="null != jilu.userId">
+                and user_id = #{jilu.userId}
+            </if>
+            <if test="null != jilu.detail and ''!=jilu.detail">
+                and detail LIKE CONCAT('%',#{jilu.detail  },'%')
+            </if>
+            <if test="null != jilu.updateNum">
+                and update_num = #{jilu.updateNum}
+            </if>
+            <if test="null != jilu.sum">
+                and sum = #{jilu.sum}
+            </if>
+            <if test="null != jilu.createTime">
+                and create_time = #{jilu.createTime}
+            </if>
+            <if test="null != jilu.updateTime">
+                and update_time = #{jilu.updateTime}
+            </if>
+            <if test="null != jilu.createBy and ''!=jilu.createBy">
+                and create_by LIKE CONCAT('%',#{jilu.createBy  },'%')
+            </if>
+            <if test="null != jilu.updateBy and ''!=jilu.updateBy">
+                and update_by LIKE CONCAT('%',#{jilu.updateBy  },'%')
+            </if>
+        </where>
+order by id desc
+    </select>
+
+</mapper>

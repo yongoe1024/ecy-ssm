@@ -53,4 +53,7 @@ public class UserInfoRes {
     private String remark;
 
     private List<Role> roleList;
+
+    private Integer score;
+
 }

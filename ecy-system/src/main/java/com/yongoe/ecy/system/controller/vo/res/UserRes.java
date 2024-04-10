@@ -1,5 +1,6 @@
 package com.yongoe.ecy.system.controller.vo.res;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yongoe.ecy.system.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -67,6 +68,7 @@ public class UserRes {
     /**
      * 上次登录时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime lastTime;
     /**
      * 是否启用
@@ -74,4 +76,7 @@ public class UserRes {
     private Boolean enabled;
 
     private List<Role> roleList;
+
+    private Integer score;
+
 }

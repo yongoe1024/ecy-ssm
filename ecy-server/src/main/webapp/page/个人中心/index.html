@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+</head>
+<style>
+    .box {
+        margin: 0 auto;
+        /* width: 90%; */
+        box-shadow: 0 1px 4px rgba(0, 21, 41, 0.2);
+        padding: 20px;
+    }
+
+    .user-info-img {
+        position: relative;
+        display: inline-block;
+        border: 2px solid #e9e4e4;
+    }
+
+    .user-info-img:hover:after {
+        content: "+";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        color: #eee;
+        background: rgba(0, 0, 0, 0.5);
+        font-size: 24px;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        cursor: pointer;
+        line-height: 100px;
+    }
+
+    .articleTitle {
+        margin-left: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 450px;
+    }
+
+    .articleTitle:hover {
+        text-decoration: underline;
+        cursor: pointer;
+        color: #3F9EFF;
+    }
+
+    .trashCanDetials {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100px;
+    }
+</style>
+
+<body>
+<iframe id="header" src="/page/layout/header2.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+
+    <div class="box">
+        <h4 style="margin-left: 60px;">个人信息</h4>
+        <el-row :gutter="20">
+            <el-col :offset="1" :span="6">
+                <el-upload :action="imgUrl" :headers="headers" :show-file-list="false" :on-success="onSuccess">
+                    <div class="user-info-img">
+                        <img style="width:100px;height:100px;" :src="form.avatar"/>
+                    </div>
+                </el-upload>
+            </el-col>
+
+            <el-col :span="16">
+                <el-form ref="form" label="right" label-width="auto">
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="角色:">
+                                <el-tag v-for="(role, index) in form.roleList" style="margin-right:5px" :key="index">{{
+                                    role.name }}
+                                </el-tag>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="姓名:" prop="name">
+                                {{form.name}}
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="账号:" prop="username">
+                                {{form.username}}
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-button type="primary" size="small" @click="myInfoCard = !myInfoCard">更多</el-button>
+                        </el-col>
+                    </el-row>
+                </el-form>
+            </el-col>
+
+        </el-row>
+
+        <div v-show="myInfoCard">
+            <el-divider></el-divider>
+            <el-form ref="form" style="margin:20px" label="right" label-width="auto" :rules="rules" :model="form">
+                <el-form-item label="积分">
+                    {{form.score}}
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="form.email" placeholder="请输入邮箱"/>
+                </el-form-item>
+                <el-form-item label="联系电话" prop="phone">
+                    <el-input v-model="form.phone" placeholder="请输入联系电话"/>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" size="small" @click="handleUpdate">修改信息</el-button>
+                </el-form-item>
+            </el-form>
+
+            <el-form :rules="passwordRules"
+                     ref="pform"
+                     :model="pform">
+                <el-form-item prop="password"
+                              label="新密码">
+                    <el-input v-model="pform.password"></el-input>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button style="width: 100%"
+                               type="primary"
+                               @click="update">修改密码
+                    </el-button>
+                </el-form-item>
+            </el-form>
+
+        </div>
+    </div>
+
+    <div>
+        <el-row :gutter="10">
+            <el-col :span="17">
+                <el-tabs type="border-card" @tab-click="handleClick">
+                    <!-- 我的心得 -->
+                    <el-tab-pane label="我的心得" name="0">
+                    </el-tab-pane>
+                    <!-- 垃圾投放记录 -->
+                    <el-tab-pane label="垃圾投放" name="1">
+                    </el-tab-pane>
+                    <el-tab-pane label="我的交易" name="2">
+                    </el-tab-pane>
+                    <el-tab-pane label="我的留言" name="3">
+                    </el-tab-pane>
+                    <el-tab-pane label="积分记录" name="4">
+                    </el-tab-pane>
+                </el-tabs>
+                <iframe id="ind" :src="src" scrolling="no" width="100%" frameborder="0" marginwidth="0" height="100%"
+                        onload="resizeIframe(this)" marginheight="0"></iframe>
+            </el-col>
+
+
+            <el-col :span="7">
+                <el-card style="margin-top: 10px;">
+                    <el-row style="background-color: #F9F9FA; padding: 5px; border-radius: 10px;">
+                        <el-col :span="17">
+                            <div style="padding: 5px;">
+                                <div style="font-size: 18px; font-weight: 550;">
+                                    我的创作之旅
+                                </div>
+                                <div style="margin-top: 10px; font-size: 16px; color: #9196A1;">
+                                    发布垃圾分类心得，关爱美好家园，共建绿色地球～
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :span="7">
+                            <img src="https://static.zhihu.com/heifetz/assets/kanshan.0c7f1d08.png"
+                                 style="width: 80%;"/>
+                        </el-col>
+                    </el-row>
+                    <div style="margin-top: 10px; font-size: 13px;">
+                        <el-button type="primary" plain style="width: 100%;" @click="handleShowEdit"><i
+                                class="el-icon-plus"></i>发布心得
+                        </el-button>
+                    </div>
+                </el-card>
+                <el-card style="margin-top: 10px;">
+                    <div style="padding: 5px;">
+                        <div style="font-size: 18px; font-weight: 550;">
+                            垃圾回收
+                        </div>
+                        <div style="margin-top: 10px; font-size: 16px; color: #9196A1;">
+                            让垃圾找到家，给地球一个清洁的回答。
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 13px;">
+                        <el-button type="success" plain style="width: 100%;" round @click="handleToGoods"><i
+                                class="el-icon-goods"></i>上架商品
+                        </el-button>
+                    </div>
+                </el-card>
+            </el-col>
+
+        </el-row>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            src: '/page/个人中心/我的心得.html',
+            url: ['/page/个人中心/我的心得.html',
+                '/page/个人中心/垃圾投放.html',
+                '/page/个人中心/我的交易.html',
+                '/page/个人中心/我的留言.html',
+                '/page/个人中心/积分记录.html'
+            ],
+            myInfoCard: false,
+            headers: {
+                Authorization: window.localStorage.getItem('token')
+            },
+            imgUrl: baseUrl + '/user/avatar',
+            total: 0,
+            pform: {
+                password: '',
+            },
+            form: {
+                name: null,
+                email: null,
+                phone: null,
+                avatar: null,
+                remark: null,
+                roleList: [],
+                username: null,
+                score: null
+            },
+            rules: {
+                phone: [{required: true, message: '请输入联系电话', trigger: 'blur'}],
+                email: [{type: 'email', required: true, message: '请输入邮箱', trigger: 'blur'}],
+            },
+            passwordRules: {
+                password: [
+                    {required: true, message: "请输入密码", trigger: "change"},
+                    {min: 6, message: '密码长度必须大于6', trigger: 'change'}
+                ],
+            },
+        },
+        mounted() {
+            this.initUser()
+        },
+        methods: {
+            update() {
+                this.$refs.pform.validate((valid) => {
+                    if (valid) {
+                        post('/user/password', this.pform)
+                    }
+                })
+            },
+            handleClick(tab, event) {
+                console.log(tab.name)
+                this.src = this.url[tab.name - 0]
+            },
+
+            onSuccess() {
+                this.initUser()
+            },
+            handleUpdate() {
+                post('/user/update', this.form).then((data) => {
+                    setTimeout(() => {
+                        this.initUser()
+                    }, 1000)
+                })
+            },
+            initUser() {
+                post('/user/info').then(data => {
+                    window.localStorage.setItem('user', JSON.stringify(data))
+                    this.form = data
+                })
+            },
+            handleShowEdit() {
+                window.location.href = "/page/发布文章.html"
+            },
+            handleToGoods() {
+                window.location.href = "/page/发布商品.html"
+            },
+        }
+    })
+</script>
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"></iframe>
+</body>
+
+</html>

@@ -50,8 +50,6 @@ import java.util.List;
 public class CommonController {
     @Value("${ecy.file-save-path}")
     private String fileSavePath;
-    @Value("${server.servlet.context-path}")
-    private String pathPrefix;
     @Resource
     private PositionService positionService;
     @Resource
@@ -118,9 +116,8 @@ public class CommonController {
      */
     @GetMapping("/download")
     public ResponseEntity<InputStreamResource> downloadFile(String filePath) throws IOException {
-        String prefix = Path.of(pathPrefix, "file").toString();
-        if (filePath.startsWith(prefix))
-            filePath = filePath.substring(prefix.length());
+        if (filePath.startsWith("file"))
+            filePath = filePath.substring("file".length());
         Path path = Path.of(fileSavePath, filePath);
         // 从文件系统中获取文件输入流
         File file = new File(path.toString());

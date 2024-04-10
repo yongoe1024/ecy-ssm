@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ecy系统</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+    <script src="/js/component.js"></script>
+</head>
+
+<body>
+<iframe id="header" src="/page/layout/header.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <div class="titleBar">
+        <h1>垃圾桶</h1>
+    </div>
+
+    <el-card class="box-card">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+
+            <el-tab-pane label="厨余垃圾" name="first">
+                <div>
+                    <el-row :gutter="20">
+                        <el-col :xl="8" :md="12">
+                            <el-card style="height: 300px;" v-for="i in rubbishList" :key="i.id">
+                                <el-row :gutter="20">
+                                    <el-col :span="10">
+                                        <img style="height:250px;width: 100%" :src="i.img"/>
+                                    </el-col>
+                                    <el-col :span="14">
+                                        <h3 style="text-align: center;">{{i.name}}</h3>
+                                        <div class="font">
+                                            {{ "容量：" + i.capacity}}
+                                        </div>
+                                        <div class="font">
+                                            {{ "状态:" }}
+                                            <span>
+                          <el-tag type="success" v-if="i.enabled == '0'">可用</el-tag>
+                          <el-tag type="info" v-if="i.enabled == '1'">不可用</el-tag>
+                        </span>
+                                        </div>
+                                        <div class="font">
+                                            <el-tooltip effect="dark" :content="i.address" placement="bottom">
+                                                <div class="tooltip-text">
+                                                    {{ "位置：" + i.address}}
+                                                </div>
+                                            </el-tooltip>
+                                        </div>
+                                        <el-button style="margin-top: 10px;" type="success" plain size="medium"
+                                                   @click="submit(i)"
+                                                   v-if="i.enabled == '0'">投放垃圾
+                                        </el-button>
+                                        <el-button style="margin-top: 10px;" type="info" plain size="medium"
+                                                   v-if="i.enabled == '1'"
+                                                   disabled>暂不可用
+                                        </el-button>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-tab-pane>
+
+            <el-tab-pane label="可回收垃圾" name="second">
+                <div>
+                    <el-row :gutter="20">
+                        <el-col :xl="8" :md="12">
+                            <el-card style="height: 300px;" v-for="i in rubbishList" :key="i.id">
+                                <el-row :gutter="20">
+                                    <el-col :span="10">
+                                        <img style="height:250px;width: 100%" :src="i.img"/>
+                                    </el-col>
+                                    <el-col :span="14">
+                                        <h3 style="text-align: center;">{{i.name}}</h3>
+                                        <div class="font">
+                                            {{ "容量：" + i.capacity}}
+                                        </div>
+                                        <div class="font">
+                                            {{ "状态:" }}
+                                            <span>
+                          <el-tag type="success" v-if="i.enabled == '0'">可用</el-tag>
+                          <el-tag type="info" v-if="i.enabled == '1'">不可用</el-tag>
+                        </span>
+                                        </div>
+                                        <div class="font">
+                                            <el-tooltip effect="dark" :content="i.address" placement="bottom">
+                                                <div class="tooltip-text">
+                                                    {{ "位置：" + i.address}}
+                                                </div>
+                                            </el-tooltip>
+                                        </div>
+                                        <el-button style="margin-top: 10px;" type="success" plain size="medium"
+                                                   @click="submit(i)"
+                                                   v-if="i.enabled == '0'">投放垃圾
+                                        </el-button>
+                                        <el-button style="margin-top: 10px;" type="info" plain size="medium"
+                                                   v-if="i.enabled == '1'"
+                                                   disabled>暂不可用
+                                        </el-button>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-tab-pane>
+
+            <el-tab-pane label="有害垃圾" name="third">
+                <div>
+                    <el-row :gutter="20">
+                        <el-col :xl="8" :md="12">
+                            <el-card style="height: 300px;" v-for="i in rubbishList" :key="i.id">
+                                <el-row :gutter="20">
+                                    <el-col :span="10">
+                                        <img style="height:250px;width: 100%" :src="i.img"/>
+                                    </el-col>
+                                    <el-col :span="14">
+                                        <h3 style="text-align: center;">{{i.name}}</h3>
+                                        <div class="font">
+                                            {{ "容量：" + i.capacity}}
+                                        </div>
+                                        <div class="font">
+                                            {{ "状态:" }}
+                                            <span>
+                          <el-tag type="success" v-if="i.enabled == '0'">可用</el-tag>
+                          <el-tag type="info" v-if="i.enabled == '1'">不可用</el-tag>
+                        </span>
+                                        </div>
+                                        <div class="font">
+                                            <el-tooltip effect="dark" :content="i.address" placement="bottom">
+                                                <div class="tooltip-text">
+                                                    {{ "位置：" + i.address}}
+                                                </div>
+                                            </el-tooltip>
+                                        </div>
+                                        <el-button style="margin-top: 10px;" type="success" plain size="medium"
+                                                   @click="submit(i)"
+                                                   v-if="i.enabled == '0'">投放垃圾
+                                        </el-button>
+                                        <el-button style="margin-top: 10px;" type="info" plain size="medium"
+                                                   v-if="i.enabled == '1'"
+                                                   disabled>暂不可用
+                                        </el-button>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-tab-pane>
+
+            <el-tab-pane label="其他垃圾" name="fourth">
+                <div>
+                    <el-row :gutter="20">
+                        <el-col :xl="8" :md="12">
+                            <el-card style="height: 300px;" v-for="i in rubbishList" :key="i.id">
+                                <el-row :gutter="20">
+                                    <el-col :span="10">
+                                        <img style="height:250px;width: 100%" :src="i.img"/>
+                                    </el-col>
+                                    <el-col :span="14">
+                                        <h3 style="text-align: center;">{{i.name}}</h3>
+                                        <div class="font">
+                                            {{ "容量：" + i.capacity}}
+                                        </div>
+                                        <div class="font">
+                                            {{ "状态:" }}
+                                            <span>
+                          <el-tag type="success" v-if="i.enabled == '0'">可用</el-tag>
+                          <el-tag type="info" v-if="i.enabled == '1'">不可用</el-tag>
+                        </span>
+                                        </div>
+                                        <div class="font">
+                                            <el-tooltip effect="dark" :content="i.address" placement="bottom">
+                                                <div class="tooltip-text">
+                                                    {{ "位置：" + i.address}}
+                                                </div>
+                                            </el-tooltip>
+                                        </div>
+                                        <el-button style="margin-top: 10px;" type="success" plain size="medium"
+                                                   @click="submit(i)"
+                                                   v-if="i.enabled == '0'">投放垃圾
+                                        </el-button>
+                                        <el-button style="margin-top: 10px;" type="info" plain size="medium"
+                                                   v-if="i.enabled == '1'"
+                                                   disabled>暂不可用
+                                        </el-button>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-tab-pane>
+
+        </el-tabs>
+
+        <el-pagination background style="margin-top: 10px; display:flex;justify-content:center;"
+                       @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :page-size="queryParam.size"
+                       layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+    </el-card>
+
+    <!-- 投放垃圾对话框 -->
+    <el-dialog title="投放" :visible.sync="open" width="500px" :destroy-on-close="true" :close-on-click-modal="false">
+        <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+            <el-form-item label="垃圾详情" prop="detials">
+                <el-input autosize v-model="form.detials" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+            <el-form-item label="投放时间" prop="putTime">
+                <el-date-picker v-model="form.putTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime"
+                                placeholder="投放时间"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="图片" prop="img">
+                <e-upload @success="(data)=>form.img=data"></e-upload>
+                <el-input v-model="form.img" placeholder="请输入图片"/>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submitForm">确 定</el-button>
+            <el-button @click="open = false">取 消</el-button>
+        </div>
+    </el-dialog>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            total: 0,
+            rubbishList: [],
+            activeName: "first",
+            // 投放垃圾参数
+            form: {
+                id: null,
+                status: null,
+                img: null,
+                detials: null,
+                trashCan: null,
+                trashCanType: null,
+                trashCanAddress: null,
+                putTime: null
+            },
+            // 表单校验
+            rules: {},
+            queryParam: {
+                current: 1,
+                size: 12,
+                id: null,
+                name: null,
+                type: null,
+                capacity: null,
+                enabled: null,
+                address: null,
+            },
+            open: false
+        },
+        mounted() {
+            this.getList()
+        },
+        methods: {
+            getList() {
+                this.queryParam.type = "厨余垃圾",
+                    post(`/project/trashcan/public/page`, this.queryParam).then(data => {
+                        this.rubbishList = data.list
+                        this.total = data.total - 0
+                    })
+            },
+            handleClick(tab, event) {
+                if (tab.label == '厨余垃圾') {
+                    this.queryParam.type = "厨余垃圾",
+                        post(`/project/trashcan/public/page`, this.queryParam).then(data => {
+                            this.rubbishList = data.list
+                            this.total = data.total - 0
+                        })
+                } else if (tab.label == '可回收垃圾') {
+                    this.queryParam.type = "可回收垃圾",
+                        post(`/project/trashcan/public/page`, this.queryParam).then(data => {
+                            this.rubbishList = data.list
+                            this.total = data.total - 0
+                        })
+                } else if (tab.label == '有害垃圾') {
+                    this.queryParam.type = "有害垃圾",
+                        post(`/project/trashcan/public/page`, this.queryParam).then(data => {
+                            this.rubbishList = data.list
+                            this.total = data.total - 0
+                        })
+                } else if (tab.label == '其他垃圾') {
+                    this.queryParam.type = "其他垃圾",
+                        post(`/project/trashcan/public/page`, this.queryParam).then(data => {
+                            this.rubbishList = data.list
+                            this.total = data.total - 0
+                        })
+                }
+            },
+            submit(i) {
+                this.open = true
+                this.form.trashCan = i.name
+                this.form.trashCanType = i.type
+                this.form.trashCanAddress = i.address
+            },
+            submitForm() {
+                this.form.status = '未审核',
+                    post(`/project/rubbish/add`, this.form).then(data => {
+                        this.open = false
+                        this.form = {}
+                    })
+            },
+            // 改变页码
+            handleSizeChange(val) {
+                this.queryParam.size = val
+                this.getList()
+            },
+            // 点击页数
+            handleCurrentChange(val) {
+                this.queryParam.current = val
+                this.getList()
+            },
+        }
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0"></iframe>
+</body>
+
+</html>

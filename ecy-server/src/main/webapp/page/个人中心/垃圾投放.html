@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模版</title>
+</head>
+<script src="/js/vue2.6.js"></script>
+<script src="/js/axios1.6.js"></script>
+<link rel="stylesheet" href="/element-ui/index.css">
+<script src="/element-ui/index.js"></script>
+<link rel="stylesheet" href="/css/index.css">
+<script src="/js/index.js"></script>
+<script src="/js/component.js"></script>
+
+<body>
+
+<div id="root">
+    <el-card style="min-height: 500px;">
+        <el-row :gutter="20" v-for="o in dataList" :key="o.id">
+            <el-col :span="6">
+                <img :src="o.img" style="height: 200px;width: 100%"/>
+            </el-col>
+            <el-col :span="18">
+                <el-descriptions class="margin-top" :column="3" border>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            垃圾类型
+                        </template>
+                        {{ o.trashCanType}}
+                    </el-descriptions-item>
+                    <el-descriptions-item v-if="o.status != '拒绝'">
+                        <template slot="label">
+                            <i class="el-icon-mobile-phone"></i>
+                            垃圾详情
+                        </template>
+                        <el-tooltip class="item" effect="dark" :content="o.detials" placement="bottom">
+                            <div class="trashCanDetials">
+                                {{ o.detials }}
+                            </div>
+                        </el-tooltip>
+                    </el-descriptions-item>
+                    <el-descriptions-item v-else>
+                        <template slot="label">
+                            <i class="el-icon-mobile-phone"></i>
+                            拒绝原因
+                        </template>
+                        <el-tooltip class="item" effect="dark" :content="o.detials" placement="bottom">
+                            <div class="trashCanDetials">
+                                {{ o.detials }}
+                            </div>
+                        </el-tooltip>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            状态
+                        </template>
+                        <el-tag size="small" v-if="o.status == '未审核'">未审核</el-tag>
+                        <el-tag type="success" size="small" v-if="o.status == '通过'">通过</el-tag>
+                        <el-tag type="info" size="small" v-if="o.status == '拒绝'">拒绝</el-tag>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-location-outline"></i>
+                            投放时间
+                        </template>
+                        <el-tooltip class="item" effect="dark" :content="o.putTime" placement="bottom">
+                            <div class="trashCanDetials">
+                                {{ o.putTime }}
+                            </div>
+                        </el-tooltip>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template slot="label">
+                            <i class="el-icon-office-building"></i>
+                            投放地址
+                        </template>
+                        {{ o.trashCanAddress }}
+                    </el-descriptions-item>
+                </el-descriptions>
+            </el-col>
+        </el-row>
+        <el-pagination background style="margin-top: 10px; float: right;" @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange" :page-size="queryParam.size"
+                       layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+    </el-card>
+
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            total: 0,
+            name: '',
+            queryParam: {
+                createBy: null,
+                current: 1,
+                size: 10,
+            },
+            dataList: []
+        },
+        mounted() {
+            this.name = JSON.parse(localStorage.getItem('user')).name
+            this.getList()
+        },
+        methods: {
+            // 改变页码
+            handleSizeChange(val) {
+                this.queryParam.size = val
+                this.getList()
+            },
+            // 点击页数
+            handleCurrentChange(val) {
+                this.queryParam.current = val
+                this.getList()
+            },
+            getList() {
+                this.queryParam.createBy = this.name
+                post(`/project/rubbish/page`, this.queryParam).then(data => {
+                    this.dataList = data.list
+                    this.total = data.total - 0
+                })
+            },
+        }
+    })
+</script>
+
+</body>
+
+</html>

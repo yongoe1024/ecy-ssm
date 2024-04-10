@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yongoe.ecy.project.mapper.TrashCanMapper">
+
+    <!--    获取分页数据-->
+    <select id="getTrashCanByPage" resultType="com.yongoe.ecy.project.entity.TrashCan">
+        select *
+        from  t_trash_can
+        <where>
+            <if test="null != trashCan.id">
+                and id = #{trashCan.id}
+            </if>
+            <if test="null != trashCan.name and ''!=trashCan.name">
+                and name LIKE CONCAT('%',#{trashCan.name  },'%')
+            </if>
+            <if test="null != trashCan.type and ''!=trashCan.type">
+                and type LIKE CONCAT('%',#{trashCan.type  },'%')
+            </if>
+            <if test="null != trashCan.capacity and ''!=trashCan.capacity">
+                and capacity LIKE CONCAT('%',#{trashCan.capacity  },'%')
+            </if>
+            <if test="null != trashCan.img and ''!=trashCan.img">
+                and img LIKE CONCAT('%',#{trashCan.img  },'%')
+            </if>
+            <if test="null != trashCan.enabled">
+                and enabled = #{trashCan.enabled}
+            </if>
+            <if test="null != trashCan.address and ''!=trashCan.address">
+                and address LIKE CONCAT('%',#{trashCan.address  },'%')
+            </if>
+            <if test="null != trashCan.createTime">
+                and create_time = #{trashCan.createTime}
+            </if>
+            <if test="null != trashCan.updateTime">
+                and update_time = #{trashCan.updateTime}
+            </if>
+            <if test="null != trashCan.createBy and ''!=trashCan.createBy">
+                and create_by LIKE CONCAT('%',#{trashCan.createBy  },'%')
+            </if>
+            <if test="null != trashCan.updateBy and ''!=trashCan.updateBy">
+                and update_by LIKE CONCAT('%',#{trashCan.updateBy  },'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+</mapper>

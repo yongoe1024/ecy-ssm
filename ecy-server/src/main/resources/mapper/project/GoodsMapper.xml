@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yongoe.ecy.project.mapper.GoodsMapper">
+
+    <!--    获取分页数据-->
+    <select id="getGoodsByPage" resultType="com.yongoe.ecy.project.entity.Goods">
+        select *
+        from  t_goods
+        <where>
+            <if test="null != goods.id">
+                and id = #{goods.id}
+            </if>
+            <if test="null != goods.name and ''!=goods.name">
+                and name LIKE CONCAT('%',#{goods.name  },'%')
+            </if>
+            <if test="null != goods.img and ''!=goods.img">
+                and img LIKE CONCAT('%',#{goods.img  },'%')
+            </if>
+            <if test="null != goods.detials and ''!=goods.detials">
+                and detials LIKE CONCAT('%',#{goods.detials  },'%')
+            </if>
+            <if test="null != goods.price and ''!=goods.price">
+                and price LIKE CONCAT('%',#{goods.price  },'%')
+            </if>
+            <if test="null != goods.address and ''!=goods.address">
+                and address LIKE CONCAT('%',#{goods.address  },'%')
+            </if>
+            <if test="null != goods.phone and ''!=goods.phone">
+                and phone LIKE CONCAT('%',#{goods.phone  },'%')
+            </if>
+            <if test="null != goods.buyerPhone and ''!=goods.buyerPhone">
+                and buyer_phone LIKE CONCAT('%',#{goods.buyerPhone  },'%')
+            </if>
+            <if test="null != goods.buyTime">
+                and buy_time = #{goods.buyTime}
+            </if>
+            <if test="null != goods.status and ''!=goods.status">
+                and status LIKE CONCAT('%',#{goods.status  },'%')
+            </if>
+            <if test="null != goods.createTime">
+                and create_time = #{goods.createTime}
+            </if>
+            <if test="null != goods.updateTime">
+                and update_time = #{goods.updateTime}
+            </if>
+            <if test="null != goods.createBy and ''!=goods.createBy">
+                and create_by =#{goods.createBy  }
+            </if>
+            <if test="null != goods.updateBy and ''!=goods.updateBy">
+                and update_by LIKE CONCAT('%',#{goods.updateBy  },'%')
+            </if>
+            <if test="null != goods.buyer and ''!=goods.buyer">
+                and buyer =#{goods.buyer}
+            </if>
+            <if test="null != goods.createBy and ''!=goods.createBy">
+                 and create_by =#{goods.createBy}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+</mapper>

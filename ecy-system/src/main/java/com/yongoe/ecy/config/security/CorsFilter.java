@@ -4,8 +4,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/*
- * 这个过滤器用来处理跨域
+/**
+ * 跨域
  */
 public class CorsFilter implements Filter {
 
@@ -21,7 +21,7 @@ public class CorsFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         // 响应对象设置跨域
         // 设置允许跨域的ip
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
         // 设置允许的请求头
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         // 设置凭证

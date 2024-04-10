@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yongoe.ecy.project.mapper.PrizeRecordMapper">
+
+    <!--    获取分页数据-->
+    <select id="getPrizeRecordByPage" resultType="com.yongoe.ecy.project.entity.PrizeRecord">
+        select *
+        from  t_prize_record
+        <where>
+            <if test="null != prizeRecord.id">
+                and id = #{prizeRecord.id}
+            </if>
+            <if test="null != prizeRecord.prizeName and ''!=prizeRecord.prizeName">
+                and prize_name LIKE CONCAT('%',#{prizeRecord.prizeName  },'%')
+            </if>
+            <if test="null != prizeRecord.createTime">
+                and create_time = #{prizeRecord.createTime}
+            </if>
+            <if test="null != prizeRecord.updateTime">
+                and update_time = #{prizeRecord.updateTime}
+            </if>
+            <if test="null != prizeRecord.createBy and ''!=prizeRecord.createBy">
+                and create_by LIKE CONCAT('%',#{prizeRecord.createBy  },'%')
+            </if>
+            <if test="null != prizeRecord.updateBy and ''!=prizeRecord.updateBy">
+                and update_by LIKE CONCAT('%',#{prizeRecord.updateBy  },'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+</mapper>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>积分商城</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+    <script src="/js/component.js"></script>
+</head>
+
+<body>
+<iframe id="header" src="/page/layout/header.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <div class="titleBar">
+        <h1>积分商城</h1>
+        <span style="margin-left: 10px;">
+        垃圾分类，关爱家园，共建绿色地球。
+      </span>
+    </div>
+
+    <el-card>
+        <el-row :gutter="20">
+            <el-col :xl="6" :md="8" :sm="12" v-for="i in prizeList" :key="i.id">
+                <el-card style="height: 400px;">
+                    <img :src="i.img" style="height:200px;width: 100%;">
+                    <div style="padding: 5px;position: relative;">
+                        <h3>{{ i.name}}</h3>
+                        <div class="font text-container">
+                            {{ i.detials }}
+                        </div>
+                        <div style="margin-top: 10px; font-size: 13px; color: #87888a;;">
+                            剩余 {{i.num }}
+                        </div>
+                        <div style="margin-top: 10px; color: #E31C1A;">
+                            积分 {{ i.score }}
+                            <el-button style="position:absolute;bottom:0;right:0;margin:10px;" type="danger" size="mini"
+                                       @click="buy(i.id)">兑换
+                            </el-button>
+                        </div>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+        <el-pagination background style="margin-top: 10px; display:flex;justify-content:center;"
+                       @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :page-size="queryParam.size"
+                       layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+    </el-card>
+</div>
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            total: 0,
+            queryParam: {
+                current: 1,
+                size: 20,
+                id: null,
+                name: null,
+                img: null,
+                detials: null,
+                score: null,
+                num: null,
+            },
+            prizeList: [],
+        },
+        mounted() {
+            this.getList()
+        },
+        methods: {
+            // 改变页码
+            handleSizeChange(val) {
+                this.queryParam.size = val
+                this.getList()
+            },
+            // 点击页数
+            handleCurrentChange(val) {
+                this.queryParam.current = val
+                this.getList()
+            },
+            buy(id) {
+                post(`/project/prize/buy/${id}`).then(data => {
+                    this.getList()
+                })
+            },
+            getList() {
+                post(`/project/prize/public/page`, this.queryParam).then(data => {
+                    this.prizeList = data.list
+                    this.total = data.total - 0
+                })
+            },
+        }
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0"></iframe>
+</body>
+
+</html>

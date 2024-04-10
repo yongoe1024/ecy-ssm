@@ -23,6 +23,11 @@ const routes = [
     component: () => import('@/views/user/Forget'),
   },
   {
+    path: '/oauth/qq',
+    name: 'QQ',
+    component: () => import('@/views/oauth/QQ'),
+  },
+  {
     path: '',
     name: '',
     component: () => import('@/views/Index'),

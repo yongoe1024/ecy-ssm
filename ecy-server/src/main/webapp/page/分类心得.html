@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类心得</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+</head>
+<style>
+    .articleHotTitle {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 330px;
+        margin-top: 30px;
+    }
+</style>
+
+<body>
+<iframe id="header" src="/page/layout/header.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <div class="titleBar">
+        <h1>投稿中心</h1>
+        <a style="margin-left: 10px;">
+            垃圾分类，关爱家园，共建绿色地球。
+        </a>
+    </div>
+    <el-row :gutter="20">
+        <el-col :span="16">
+            <el-card class="font">
+                <div v-for="i in articleList" :key="i.id">
+                    <el-row>
+                        <el-col :span="16">
+                            <div class="text-container" style="cursor: pointer;" @click="toReadArticle(i.id)">
+                                {{i.title}}
+                            </div>
+                        </el-col>
+                        <el-col :span="5"><span>{{formatDate(i.createTime)}}</span></el-col>
+                        <el-col :span="3"><span>{{i.createBy}}</span></el-col>
+                    </el-row>
+                    <el-divider/>
+                </div>
+            </el-card>
+        </el-col>
+
+        <el-col :span="8">
+            <el-card>
+                <el-row>
+                    <el-col :span="17">
+                        <div style="padding: 5px;">
+                            <div style="font-size: 18px; font-weight: 550;">
+                                开启您的分享创作之旅
+                            </div>
+                            <div style="margin-top: 10px; font-size: 16px; color: #9196A1;">
+                                发布文章，开启创作之旅，快来成为分享者吧～
+                            </div>
+                        </div>
+                    </el-col>
+                    <el-col :span="7">
+                        <img src="https://static.zhihu.com/heifetz/assets/kanshan.0c7f1d08.png" style="width: 80px;"/>
+                    </el-col>
+                </el-row>
+                <div style="margin-top: 10px; font-size: 13px;">
+                    <el-button @click="handleShowEdit" type="primary" plain style="width: 100%;">
+                        <i class="el-icon-plus"></i>开始分享
+                    </el-button>
+                </div>
+            </el-card>
+
+            <el-card style="height: 520px; margin-top: 10px;">
+                <h3>热门话题</h3>
+                <div v-for="o in articleHotList" :key="o.id" style="margin-top: 20px; font-size: 15px; color: #606164;">
+                    <div>
+              <span style="cursor: pointer;" @click="toReadArticle(o.id)">
+                <i class="el-icon-medal"></i>
+                {{ o.title }}
+              </span>
+                    </div>
+                </div>
+            </el-card>
+        </el-col>
+    </el-row>
+
+    <el-pagination background style="margin-top: 10px; display:flex;justify-content:center;"
+                   @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="queryParam.size"
+                   layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+
+    <el-dialog :visible.sync="dialogVisible" title="发布" :destroy-on-close="true" @close="reset"
+               :close-on-click-modal="false" width="600px">
+        <el-form ref="form" :model="form" label-width="auto" style="margin:20px" :rules="rules">
+            <el-form-item label="标题" prop="title">
+                <el-input v-model="form.title" placeholder="请输入标题"/>
+            </el-form-item>
+            <el-form-item label="内容" prop="content">
+                <el-input type="textarea" v-model="form.content" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+        <el-button size="medium" @click="dialogVisible = false">取 消</el-button>
+        <el-button size="medium" type="primary" @click="handleAdd">确 定</el-button>
+      </span>
+    </el-dialog>
+</div>
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            dialogVisible: false,
+            form: {
+                title: null,
+                content: null,
+                status: '未审核',
+            },
+            total: 0,
+            queryParam: {
+                current: 1,
+                size: 10,
+                status: '通过',
+            },
+            articleList: [],
+            articleHotList: [],
+            rules: {
+                title: [{required: true, message: '请输入标题', trigger: 'change'}],
+                content: [{required: true, message: '请输入内容', trigger: 'change'}],
+            },
+        },
+        mounted() {
+            this.getList()
+            this.getHotList()
+        },
+        methods: {
+            toReadArticle(id) {
+                window.location.href = "/page/文章.html?id=" + id
+            },
+            // 改变页码
+            handleSizeChange(val) {
+                this.queryParam.size = val
+                this.getList()
+            },
+            // 点击页数
+            handleCurrentChange(val) {
+                this.queryParam.current = val
+                this.getList()
+            },
+            reset() {
+                this.form = this.$options.data().form
+            },
+            handleShowEdit() {
+                window.location.href = "/page/发布文章.html"
+            },
+            handleAdd() {
+                this.$refs.form.validate((valid) => {
+                    if (valid) {
+                        post('/project/article/add', this.form).then(() => {
+                            this.getList()
+                            this.dialogVisible = false
+                        })
+                    }
+                })
+            },
+            getList() {
+                post(`/project/article/public/page`, this.queryParam).then(data => {
+                    this.articleList = data.list
+                    this.total = data.total - 0
+                })
+            },
+            getHotList() {
+                post(`/project/article/public/page`, {
+                    current: 1,
+                    size: 7,
+                    status: '通过',
+                }).then(data => {
+                    this.articleHotList = data.list
+                    this.total = data.total - 0
+                })
+            },
+        }
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0"></iframe>
+</body>
+
+</html>

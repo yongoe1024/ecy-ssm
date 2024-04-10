@@ -12,4 +12,5 @@ ecy-file
 *.iml
 pom.xml.versionsBackup
 
+pnpm-lock.yaml
 out

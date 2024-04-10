@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ecy系统</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+</head>
+
+<body>
+<iframe id="header" src="/page/layout/header2.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <el-card style="width: 500px;">
+        <el-form :rules="rules" ref="form" :model="form" label="right" label-width="auto" class="login-box">
+            <el-form-item>
+                <h1>注册新账号</h1>
+            </el-form-item>
+
+            <el-form-item prop="username" label="账号:">
+                <el-input v-model="form.username" placeholder="请输入账号">
+                </el-input>
+            </el-form-item>
+
+            <el-form-item prop="password" label="密码:">
+                <el-input show-password v-model="form.password" placeholder="请输入密码"></el-input>
+            </el-form-item>
+
+            <el-form-item prop="name" label="姓名:">
+                <el-input v-model="form.name" placeholder="请输入姓名">
+                </el-input>
+            </el-form-item>
+            <el-form-item prop="email" label="邮箱:">
+                <el-input v-model="form.email" placeholder="请输入邮箱">
+                </el-input>
+            </el-form-item>
+            <el-form-item prop="phone" label="手机号:">
+                <el-input v-model="form.phone" placeholder="请输入手机号">
+                </el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button style="width: 100%" type="primary" @click="submitForm">立即注册</el-button>
+            </el-form-item>
+
+            <el-link type="primary" @click="login">已有账号？立即登录</el-link>
+        </el-form>
+    </el-card>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            form: {
+                name: null,
+                phone: null,
+                email: null,
+                username: null,
+                password: null,
+            },
+            rules: {
+                name: [{required: true, message: '请输入姓名', trigger: 'change'}],
+                phone: [{required: true, message: '请输入手机', trigger: 'change'}],
+                email: [{type: 'email', required: true, message: '请输入邮箱', trigger: 'change'}],
+                username: [{required: true, message: '请输入用户名', trigger: 'change'}],
+                password: [
+                    {required: true, message: "请输入密码", trigger: "change"},
+                    {min: 6, message: '密码长度必须大于6', trigger: 'change'}
+                ],
+            },
+        },
+        mounted() {
+            if (window.localStorage.getItem('token')) {
+                window.location.href = '/index.html'
+            }
+        },
+        methods: {
+            login() {
+                window.location.href = '/page/login.html'
+            },
+            submitForm() {
+                this.$refs.form.validate((valid) => {
+                    if (valid) {
+                        post('/register', this.form).then(() => {
+                            setTimeout(() => {
+                                window.location.href = "/page.login.html"
+                            }, 1000)
+                        })
+                    }
+                })
+            },
+        }
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0"></iframe>
+</body>
+
+</html>

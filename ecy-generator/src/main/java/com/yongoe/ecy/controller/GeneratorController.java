@@ -24,16 +24,16 @@ public class GeneratorController {
      */
     public static void main(String[] args) {
         GeneratorConfig generatorConfig = GeneratorConfig.builder()
-                .url("jdbc:mysql://localhost:3306/ecy?serverTimezone=GMT%2B8&characterEncoding=utf8&useUnicode=true&useSSL=false")
+                .url("jdbc:mysql://localhost:3306/ecy-ssm?serverTimezone=GMT%2B8&characterEncoding=utf8&useUnicode=true&useSSL=false")
                 .projectPath(System.getProperty("user.dir"))
                 .username("root")
                 .password("123456")
                 .author("yongoe")
-                .tablePrefix("")
-                .tableName("sys_role")
+                .tablePrefix("t_")
+                .tableName("t_jilu")
                 .packageName("project") //  包名必填--新项目名
-                .moduleName("信件管理")
-                .parentId("1")
+                .moduleName("积分记录")
+                .parentId("100")
                 .add(true)
                 .update(true)
                 .get(true)

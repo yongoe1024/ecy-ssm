@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yongoe.ecy.project.mapper.PrizeMapper">
+
+    <!--    获取分页数据-->
+    <select id="getPrizeByPage" resultType="com.yongoe.ecy.project.entity.Prize">
+        select *
+        from  t_prize
+        <where>
+            <if test="null != prize.id">
+                and id = #{prize.id}
+            </if>
+            <if test="null != prize.name and ''!=prize.name">
+                and name LIKE CONCAT('%',#{prize.name  },'%')
+            </if>
+            <if test="null != prize.img and ''!=prize.img">
+                and img LIKE CONCAT('%',#{prize.img  },'%')
+            </if>
+            <if test="null != prize.detials and ''!=prize.detials">
+                and detials LIKE CONCAT('%',#{prize.detials  },'%')
+            </if>
+            <if test="null != prize.score and ''!=prize.score">
+                and score LIKE CONCAT('%',#{prize.score  },'%')
+            </if>
+            <if test="null != prize.num">
+                and num = #{prize.num}
+            </if>
+            <if test="null != prize.createTime">
+                and create_time = #{prize.createTime}
+            </if>
+            <if test="null != prize.updateTime">
+                and update_time = #{prize.updateTime}
+            </if>
+            <if test="null != prize.createBy and ''!=prize.createBy">
+                and create_by LIKE CONCAT('%',#{prize.createBy  },'%')
+            </if>
+            <if test="null != prize.updateBy and ''!=prize.updateBy">
+                and update_by LIKE CONCAT('%',#{prize.updateBy  },'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+</mapper>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ecy系统</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+</head>
+<style>
+    .return {
+        margin-left: 10px;
+    }
+
+    .return:hover {
+        text-decoration: underline;
+        cursor: pointer;
+        color: #3F9EFF;
+    }
+</style>
+
+<body>
+<iframe id="header" src="/page/layout/header2.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <div class="titleBar">
+        <h1>发布文章</h1>
+        <a class="return" @click="toArticle">
+            返回
+        </a>
+    </div>
+    <el-card>
+        <el-form ref="form" :model="form" label-width="auto" style="margin:20px" :rules="rules">
+            <el-form-item label="标题" prop="title">
+                <el-input v-model="form.title" placeholder="请输入标题"/>
+            </el-form-item>
+            <el-form-item label="内容" prop="content">
+                <el-input :rows="17" v-model="form.content" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+        </el-form>
+        <el-button style="float: right; margin-bottom: 15px; margin-right: 20px;" size="medium" type="primary"
+                   @click="handleAdd">确 定
+        </el-button>
+    </el-card>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            form: {
+                title: null,
+                content: null,
+                status: '未审核',
+            },
+            total: 0,
+            rules: {
+                title: [{required: true, message: '请输入标题', trigger: 'change'}],
+                content: [{required: true, message: '请输入内容', trigger: 'change'}],
+            },
+        },
+        mounted() {
+        },
+        methods: {
+            handleAdd() {
+                this.$refs.form.validate((valid) => {
+                    if (valid) {
+                        post('/project/article/add', this.form).then(() => {
+                            this.toArticle()
+                        })
+                    }
+                })
+            },
+            toArticle() {
+                window.location.href = "/page/分类心得.html"
+            }
+        }
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0"></iframe>
+</body>
+
+</html>

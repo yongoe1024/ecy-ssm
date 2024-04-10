@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yongoe.ecy.project.mapper.GonggaoMapper">
+
+    <!--    获取分页数据-->
+    <select id="getGonggaoByPage" resultType="com.yongoe.ecy.project.entity.Gonggao">
+        select *
+        from  t_gonggao
+        <where>
+            <if test="null != gonggao.id">
+                and id = #{gonggao.id}
+            </if>
+            <if test="null != gonggao.title">
+                and   title LIKE CONCAT('%',#{gonggao.title  },'%')
+            </if>
+            <if test="null != gonggao.content and ''!=gonggao.content">
+                and content LIKE CONCAT('%',#{gonggao.content  },'%')
+            </if>
+            <if test="null != gonggao.createTime">
+                and create_time = #{gonggao.createTime}
+            </if>
+            <if test="null != gonggao.updateTime">
+                and update_time = #{gonggao.updateTime}
+            </if>
+            <if test="null != gonggao.createBy and ''!=gonggao.createBy">
+                and create_by LIKE CONCAT('%',#{gonggao.createBy  },'%')
+            </if>
+            <if test="null != gonggao.updateBy and ''!=gonggao.updateBy">
+                and update_by LIKE CONCAT('%',#{gonggao.updateBy  },'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+</mapper>

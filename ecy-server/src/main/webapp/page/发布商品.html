@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ecy系统</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+    <script src="/js/component.js"></script>
+</head>
+<style>
+    .return {
+        margin-left: 10px;
+    }
+
+    .return:hover {
+        text-decoration: underline;
+        cursor: pointer;
+        color: #3F9EFF;
+    }
+</style>
+
+<body>
+<iframe id="header" src="/page/layout/header2.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <div class="titleBar">
+        <h1>发布商品</h1>
+        <a class="return" @click="goBack">
+            返回
+        </a>
+    </div>
+    <el-card>
+        <el-form ref="form" :model="form" label-width="auto" style="margin:20px" :rules="rules">
+            <el-form-item label="名称" prop="name">
+                <el-input v-model="form.name" placeholder="请输入名称"/>
+            </el-form-item>
+            <el-form-item label="图片" prop="img">
+                <e-upload @success="(data)=>form.img=data"></e-upload>
+                <el-input v-model="form.img" placeholder="请输入图片"/>
+            </el-form-item>
+            <el-form-item label="详情" prop="detials">
+                <el-input v-model="form.detials" type="textarea" autosize placeholder="请输入详情"/>
+            </el-form-item>
+            <el-form-item label="价格" prop="price">
+                <el-input v-model="form.price" placeholder="请输入价格"/>
+            </el-form-item>
+            <el-form-item label="交易地点" prop="address">
+                <el-input v-model="form.address" placeholder="请输入交易地点"/>
+            </el-form-item>
+            <el-form-item label="联系方式" prop="phone">
+                <el-input v-model="form.phone" placeholder="请输入联系方式"/>
+            </el-form-item>
+            <el-form-item>
+                <el-button style="width: 100%;" type="primary" @click="handleAdd">确 定</el-button>
+            </el-form-item>
+        </el-form>
+
+    </el-card>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            form: {
+                id: null,
+                name: null,
+                img: null,
+                detials: null,
+                price: null,
+                address: null,
+                phone: null,
+                buyer: null,
+                buyerPhone: null,
+                buyTime: null,
+                status: "未售出",
+            },
+            total: 0,
+            rules: {
+                name: [{required: true, message: '请输入名称', trigger: 'change'}],
+                img: [{required: true, message: '请上传图片', trigger: 'change'}],
+                detials: [{required: true, message: '请输入详情', trigger: 'change'}],
+                price: [{required: true, message: '请输入价格', trigger: 'change'}],
+                address: [{required: true, message: '请输入交易地点', trigger: 'change'}],
+                phone: [{required: true, message: '请输入联系方式', trigger: 'change'}],
+            },
+        },
+        mounted() {
+        },
+        methods: {
+            handleAdd() {
+                this.$refs.form.validate((valid) => {
+                    if (valid) {
+                        post('/project/goods/add', this.form).then(() => {
+                            this.goBack()
+                        })
+                    }
+                })
+            },
+            goBack() {
+                history.back()
+            },
+        }
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0"></iframe>
+</body>
+
+</html>

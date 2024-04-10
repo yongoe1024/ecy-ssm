@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>垃圾回收</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+</head>
+
+<body>
+<iframe id="header" src="/page/layout/header.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <div class="titleBar">
+        <h1>垃圾回收</h1>
+        <a style="margin-left: 10px;">
+            垃圾分类，关爱家园，共建绿色地球。
+        </a>
+    </div>
+    <el-card>
+        <el-row :gutter="20">
+            <el-col :xl="6" :md="8" :sm="12" v-for="i in goodsList" :key="i.id">
+                <el-card style="height: 400px;">
+                    <img :src="i.img" style="height:200px;width: 100%;">
+                    <div style="padding: 5px;">
+                        <h3>{{ i.name}}</h3>
+                        <div class="font">
+                            <el-tooltip effect="dark" :content="i.detials" placement="bottom">
+                                <div class="tooltip-text text-container">
+                                    {{ i.detials }}
+                                </div>
+                            </el-tooltip>
+                        </div>
+                        <div style="font-size: 13px; color: #87888a;;">
+                            状态：
+                            <el-tag v-if="i.status == '未售出'">{{ i.status }}</el-tag>
+                            <el-tag type="success" v-if="i.status == '交易中'">{{ i.status }}</el-tag>
+                            <el-tag type="info" v-if="i.status == '已售出'">{{ i.status }}</el-tag>
+                        </div>
+                        <div style="margin-top: 10px; color: #E31C1A;">
+                            价格： {{i.price }}
+                            <el-button v-if="i.status=='未售出'" style=" float: right;" type="danger" size="mini"
+                                       @click="buy(i.id)">购买
+                            </el-button>
+                        </div>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+        <el-pagination background style="margin-top: 10px; display:flex;justify-content:center;"
+                       @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :page-size="queryParam.size"
+                       layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+    </el-card>
+</div>
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            total: 0,
+            queryParam: {
+                current: 1,
+                size: 15,
+                id: null,
+                name: null,
+                img: null,
+                detials: null,
+                price: null,
+                address: null,
+                phone: null,
+                buyer: null,
+                buyerPhone: null,
+                buyTime: null,
+                status: '未售出',
+            },
+            goodsList: [],
+        },
+        mounted() {
+            this.getList()
+        },
+        methods: {
+            // 改变页码
+            handleSizeChange(val) {
+                this.queryParam.size = val
+                this.getList()
+            },
+            // 点击页数
+            handleCurrentChange(val) {
+                this.queryParam.current = val
+                this.getList()
+            },
+            buy(id) {
+                this.$confirm('是否要购买该商品？')
+                    .then(_ => {
+                        post(`/project/goods/buy/${id}`).then(data => {
+                            this.getList()
+                        })
+                    })
+                    .catch(_ => {
+                        this.$message('已取消购买')
+                    })
+            },
+            getList() {
+                post(`/project/goods/public/page`, this.queryParam).then(data => {
+                    this.goodsList = data.list
+                    this.total = data.total - 0
+                })
+            },
+        }
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0"></iframe>
+</body>
+
+</html>

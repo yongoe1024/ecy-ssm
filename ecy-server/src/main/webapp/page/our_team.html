@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们</title>
+    <script src="/js/vue2.6.js"></script>
+    <script src="/js/axios1.6.js"></script>
+    <link rel="stylesheet" href="/element-ui/index.css">
+    <script src="/element-ui/index.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/js/index.js"></script>
+</head>
+<style>
+    p {
+        color: #0D0D0D;
+        font-size: 16px;
+        background-color: #FFFFFF;
+    }
+</style>
+
+<body>
+<iframe id="header" src="/page/layout/header.html" scrolling="no" width="100%" frameborder="0" marginwidth=0
+        onload="resizeIframe(this)" marginheight=0></iframe>
+
+<div id="root">
+    <div class="titleBar">
+        <h1>关于我们</h1>
+    </div>
+    <el-card style="margin: 10px;">
+        <p>
+            校园垃圾管理系统是为了提高学校环境卫生水平而设计的创新解决方案。
+        </p>
+        <p>
+            我们的团队由专业人士和热心的志愿者组成，致力于通过技术和社区参与，推动校园垃圾管理的现代化。
+        </p>
+        <p>
+            我们相信，通过有效的垃圾分类、循环利用和资源回收，我们可以为未来的可持续发展做出贡献。
+        </p>
+        <p>
+            我们致力于建立一个清洁、整洁的校园环境，为学生和教职员工提供更健康、更宜居的学习和工作场所。
+        </p>
+        <p>
+            通过我们的系统，我们希望激发更多人的环保意识，共同为创造更美好的未来而努力。
+        </p>
+    </el-card>
+</div>
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            message: 'Hello Vue!'
+        },
+        mounted() {
+
+        },
+        methods: {}
+    })
+</script>
+
+
+<iframe id="footer" src="/page/layout/footer.html" scrolling="no" width="100%" frameborder="0" marginwidth="0"
+        frameborder="0"></iframe>
+</body>
+
+</html>

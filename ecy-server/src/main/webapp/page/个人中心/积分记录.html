@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模版</title>
+</head>
+<script src="/js/vue2.6.js"></script>
+<script src="/js/axios1.6.js"></script>
+<link rel="stylesheet" href="/element-ui/index.css">
+<script src="/element-ui/index.js"></script>
+<link rel="stylesheet" href="/css/index.css">
+<script src="/js/index.js"></script>
+<script src="/js/component.js"></script>
+
+<body>
+
+<div id="root">
+    <!-- 表格 -->
+    <el-table :data="dataList"
+              style="width: 100%"
+              :header-cell-style="{background:'#eef1f6'}">
+        <el-table-column prop="detail"
+                         label="原因"
+                         align="center"></el-table-column>
+        <el-table-column prop="updateNum"
+                         label="变化数量"
+                         align="center"></el-table-column>
+        <el-table-column prop="sum"
+                         label="当前总数"
+                         align="center"></el-table-column>
+        <el-table-column prop="createTime"
+                         label="时间"
+                         align="center"></el-table-column>
+    </el-table>
+    <!-- 分页 -->
+    <el-pagination background
+                   style="display:flex;justify-content:center;"
+                   @size-change="handleSizeChange"
+                   @current-change="handleCurrentChange"
+                   :page-size="queryParam.size"
+                   layout="total, sizes, prev, pager, next, jumper"
+                   :total="total"></el-pagination>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#root',
+        data: {
+            total: 0,
+            name: '',
+            queryParam: {
+                current: 1,
+                size: 10,
+            },
+            dataList: []
+        },
+        mounted() {
+            this.getList()
+        },
+        methods: {
+            // 改变页码
+            handleSizeChange(val) {
+                this.queryParam.size = val
+                this.getList()
+            },
+            // 点击页数
+            handleCurrentChange(val) {
+                this.queryParam.current = val
+                this.getList()
+            },
+            // 初始化数据
+            getList() {
+                post(`/project/jilu/page`, this.queryParam).then(data => {
+                    this.dataList = data.list
+                    this.total = data.total - 0
+                })
+            },
+        }
+    })
+</script>
+
+</body>
+
+</html>
