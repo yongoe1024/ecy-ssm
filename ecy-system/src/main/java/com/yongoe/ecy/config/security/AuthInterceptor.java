@@ -1,6 +1,8 @@
 package com.yongoe.ecy.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yongoe.ecy.config.aop.IgnoreAuth;
+import com.yongoe.ecy.config.aop.IgnoreLogin;
 import com.yongoe.ecy.system.entity.Menu;
 import com.yongoe.ecy.system.entity.Role;
 import com.yongoe.ecy.system.entity.User;
@@ -10,6 +12,7 @@ import com.yongoe.ecy.utils.UserThreadLocal;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
@@ -31,6 +34,17 @@ public class AuthInterceptor implements HandlerInterceptor {
     private MenuService menuService;
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        IgnoreLogin ignoreLogin;
+        IgnoreAuth ignoreAuth;
+        if (handler instanceof HandlerMethod) {
+            ignoreLogin = ((HandlerMethod) handler).getMethodAnnotation(IgnoreLogin.class);
+            ignoreAuth = ((HandlerMethod) handler).getMethodAnnotation(IgnoreAuth.class);
+            if (ignoreLogin != null || ignoreAuth != null) {
+                return true;
+            }
+        } else {
+            return true;
+        }
         User user = UserThreadLocal.get();
         // 管理员全部放行
         for (Role role : user.getRoleList()) {

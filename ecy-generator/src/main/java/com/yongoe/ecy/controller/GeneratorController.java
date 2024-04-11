@@ -17,10 +17,10 @@ public class GeneratorController {
      * 在 vue文件夹会有 sql ，需要手动执行
      */
     /*
-	   ALTER TABLE `ecy`.`basic_lettet` ADD COLUMN `create_time` DATETIME NOT NULL COMMENT '创建时间' ;
-	   ALTER TABLE `ecy`.`basic_lettet` ADD COLUMN `update_time` DATETIME NOT NULL COMMENT '修改时间' ;
-	   ALTER TABLE `ecy`.`basic_lettet` ADD COLUMN `create_by` VARCHAR(50) NOT NULL COMMENT '创建人' ;
-	   ALTER TABLE `ecy`.`basic_lettet` ADD COLUMN `update_by` VARCHAR(50) NOT NULL COMMENT '修改人' ;
+	   ALTER TABLE `ecy-ssm`.`t_comment` ADD COLUMN `create_time` DATETIME NOT NULL COMMENT '创建时间' ;
+	   ALTER TABLE `ecy-ssm`.`t_comment` ADD COLUMN `update_time` DATETIME NOT NULL COMMENT '修改时间' ;
+	   ALTER TABLE `ecy-ssm`.`t_comment` ADD COLUMN `create_by` VARCHAR(50) NOT NULL COMMENT '创建人' ;
+	   ALTER TABLE `ecy-ssm`.`t_comment` ADD COLUMN `update_by` VARCHAR(50) NOT NULL COMMENT '修改人' ;
      */
     public static void main(String[] args) {
         GeneratorConfig generatorConfig = GeneratorConfig.builder()
@@ -30,10 +30,10 @@ public class GeneratorController {
                 .password("123456")
                 .author("yongoe")
                 .tablePrefix("t_")
-                .tableName("t_jilu")
+                .tableName("t_comment")
                 .packageName("project") //  包名必填--新项目名
-                .moduleName("积分记录")
-                .parentId("100")
+                .moduleName("留言评论")
+                .parentId("1")
                 .add(true)
                 .update(true)
                 .get(true)

@@ -22,7 +22,7 @@ Vue.component('e-message', {
           <el-row :gutter="20">
             <el-col :span="2">
             <div style="width: 100%;height: 0;padding-bottom: 100%;position: relative;">
-             <img :src="i.avatar" style="width: 100%;height: 100%;position: absolute;border-radius: 50%;" />
+             <img :src="i.avatar" style="border: 1px solid #72767b;width: 100%;height: 100%;position: absolute;border-radius: 50%;" />
             </div>
             </el-col>
             <el-col :span="22">
@@ -43,7 +43,7 @@ Vue.component('e-message', {
                 <el-row :gutter="20">
                   <el-col :span="2">
                        <div style="width: 100%;height: 0;padding-bottom: 100%;position: relative;">
-                        <img :src="i.avatar" style="width: 100%;height: 100%;position: absolute;border-radius: 50%;" />
+                        <img :src="i.avatar" style="border: 1px solid #72767b;width: 100%;height: 100%;position: absolute;border-radius: 50%;" />
                         </div>
                   </el-col>
                   <el-col :span="22">
@@ -66,16 +66,15 @@ Vue.component('e-message', {
           <el-divider />
         </div>
         <el-pagination background style="margin-top: 10px; display:flex;justify-content:center;"
-          @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="queryParam.size"
-          layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+              @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="queryParam.size"
+              layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
       </el-card>
     </div>
 
-  <el-drawer
-  title="回复"
-  :visible.sync="drawer"
-  direction="btt"
-  :before-close="handleClose">
+  <el-drawer title="回复"
+              :visible.sync="drawer"
+              direction="btt"
+              :before-close="handleClose">
    <div style="margin-top: 15px;" >
                 <el-row :gutter="10">
                   <el-col :offset="1" :span="20">
@@ -91,6 +90,8 @@ Vue.component('e-message', {
    </div>
 
   `,
+    // 1. 留言板 2. 评论
+    props: ['table',"type"],
     data: function () {
         return {
             drawer: false,
@@ -98,11 +99,15 @@ Vue.component('e-message', {
             queryParam: {
                 current: 1,
                 size: 10,
+                table: this.table,
+                type: this.type,
             },
             content: '',
             reContent: {
                 content: '',
                 parentId: null,
+                table: this.table,
+                type: this.type,
             },
             messageList: [],
         }
@@ -122,24 +127,22 @@ Vue.component('e-message', {
             this.getList()
         },
         toReplay() {
-            post(`/project/message/add`, this.reContent).then(data => {
-                this.reContent = {
-                    content: '',
-                    parentId: null,
-                }
+            post(`/project/comment/add`, this.reContent).then(data => {
+                this.reContent.content = ''
+                this.reContent.parentId = null
                 this.drawer = false
                 this.getList()
             })
         },
         toReplayShow(i) {
             this.drawer = true
-            this.reContent = {
-                content: '',
-                parentId: i.id,
-            }
+            this.reContent.content = ''
+            this.reContent.parentId = i.id
         },
         addMessage() {
-            post(`/project/message/add`, {
+            post(`/project/comment/add`, {
+                table: this.table,
+                type: this.type,
                 content: this.content,
                 parentId: 0,
             }).then(data => {
@@ -149,7 +152,7 @@ Vue.component('e-message', {
             })
         },
         getList() {
-            post(`/project/message/public/page`, this.queryParam).then(data => {
+            post(`/project/comment/page`, this.queryParam).then(data => {
                 this.messageList = data.list
                 this.total = data.total - 0
             })

@@ -20,7 +20,6 @@
         <result column="last_ip" property="lastIp"/>
         <result column="last_time" property="lastTime"/>
         <result column="enabled" property="enabled"/>
-        <result column="score" property="score"/>
         <collection property="roleList"
                     select="selectRoleByUserId"
                     column="id">

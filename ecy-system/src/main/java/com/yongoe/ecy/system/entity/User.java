@@ -70,6 +70,4 @@ public class User {
     @TableField(exist = false)
     private List<Role> roleList;
 
-    private Integer score;
-
 }

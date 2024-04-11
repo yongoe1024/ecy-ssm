@@ -77,6 +77,4 @@ public class UserRes {
 
     private List<Role> roleList;
 
-    private Integer score;
-
 }

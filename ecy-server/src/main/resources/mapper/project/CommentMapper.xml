@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yongoe.ecy.project.mapper.CommentMapper">
+
+    <!--    获取分页数据-->
+    <select id="getCommentByPage" resultType="com.yongoe.ecy.project.entity.Comment">
+        select t_comment.*,u1.avatar
+        from t_comment left join sys_user u1 on t_comment.create_by = u1.name
+        <where>
+            t_comment.parent_id =0
+            <if test="null != comment.id">
+                and id = #{comment.id}
+            </if>
+            <if test="null != comment.table and ''!=comment.table">
+                and `table` LIKE CONCAT('%',#{comment.table  },'%')
+            </if>
+            <if test="null != comment.type and ''!=comment.type">
+                and `type` LIKE CONCAT('%',#{comment.type  },'%')
+            </if>
+            <if test="null != comment.content and ''!=comment.content">
+                and content LIKE CONCAT('%',#{comment.content  },'%')
+            </if>
+            <if test="null != comment.status and ''!=comment.status">
+                and status LIKE CONCAT('%',#{comment.status  },'%')
+            </if>
+            <if test="null != comment.param and ''!=comment.param">
+                and param LIKE CONCAT('%',#{comment.param  },'%')
+            </if>
+            <if test="null != comment.createTime">
+                and create_time = #{comment.createTime}
+            </if>
+            <if test="null != comment.updateTime">
+                and update_time = #{comment.updateTime}
+            </if>
+            <if test="null != comment.createBy and ''!=comment.createBy">
+                and create_by LIKE CONCAT('%',#{comment.createBy  },'%')
+            </if>
+            <if test="null != comment.updateBy and ''!=comment.updateBy">
+                and update_by LIKE CONCAT('%',#{comment.updateBy  },'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+</mapper>
